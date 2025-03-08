@@ -11,7 +11,16 @@ import PromptSuggestionsRow from "./components/PromptSuggestionsRow";
 const Home = () => {
     const {append, isLoading, messages, input, handleInputChange, handleSubmit} = useChat()
 
-    const noMessages = false 
+    const noMessages = !messages || messages.length === 0
+
+    const handlePrompt = ( promptText ) => {
+        const msg: Message = {
+            id: crypto.randomUUID(),
+            content: promptText,
+            role: "user"
+        }
+        append(msg)
+    }
     
     return(
         <main>
@@ -24,11 +33,12 @@ const Home = () => {
                             Welcome to F1 GPT! Ask me anything about Formula 1 and I'll do my best to answer.
                         </p>
                         <br />
-                        <PromptSuggestionsRow />
+                        <PromptSuggestionsRow onPromptClick={handlePrompt}/>
                     </>
                 ) : (
                     <>
                         {/* Map messages onto text bubbles */}
+                        {messages.map((message, index) => <Bubble key={`message-${index}`} message={message}/>)} 
                         {isLoading && <LoadingBubble/>}
                     </>
                 )}
