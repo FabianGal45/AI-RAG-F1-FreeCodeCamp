@@ -7,6 +7,7 @@ import { Message } from "ai";
 import Bubble from "./components/Bubble";
 import LoadingBubble from "./components/LoadingBubble";
 import PromptSuggestionsRow from "./components/PromptSuggestionsRow";
+import { v4 as uuidv4 } from 'uuid'; 
 
 const Home = () => {
     const {append, isLoading, messages, input, handleInputChange, handleSubmit} = useChat()
@@ -15,7 +16,7 @@ const Home = () => {
 
     const handlePrompt = ( promptText ) => {
         const msg: Message = {
-            id: crypto.randomUUID(),
+            id: uuidv4(),
             content: promptText,
             role: "user"
         }

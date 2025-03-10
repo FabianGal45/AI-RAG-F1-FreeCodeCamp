@@ -4,7 +4,7 @@ const PromptSuggestionButton = ( {text, onClick} ) =>{
             className="prompt-suggestion-button" 
             onClick={onClick}
         >
-
+            {text}
         </button>
     );
 }

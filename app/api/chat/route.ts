@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { streamText } from 'ai';
 import { DataAPIClient } from "@datastax/astra-db-ts";
 import exp from 'constants';
 
@@ -70,14 +70,22 @@ export async function POST(req: Request){
             `
         }
 
-        const response = await openai.chat.completions.create({
-            model: "gpt-4",
-            stream: true,
-            messages: [template, ...messages]
-        })
 
-        const stream = OpenAIStream(response)
-        return new StreamingTextResponse(stream)
+        // Request OpenAI completion stream
+        const response = await openai.chat.completions.create({
+            model: "gpt-4",   // Here, we specify the model once.
+            stream: true,      // Stream option
+            messages: [template, ...messages] // Pass in the system and user messages
+        });
+
+
+        console.log("####### ## ## ## ## ## ## ## ## OpenAI API Response:", response);
+
+        // Handle the response stream properly (await the AsyncGenerator and consume it)
+        const stream = streamText(response); // Directly pass the stream (no need to specify the model here)
+
+        // Return the response properly
+        return stream.toDataStreamResponse();
 
     } catch (err){
         throw err
